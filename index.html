@@ -390,6 +390,7 @@ canvas#cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-a
 const W=1800,H=540,GY=452,PB=110,EB=W-110,BF=64;
 const S=[1,2.1,4.3,8.6,16,30,56], C=[1,2,3.9,7.6,14,26,48];
 const XPN=[650,2300,6400,15000,30000,60000];
+const BASEH=[1,1.8,3.65,7.3,13.6,25.5,47.6];
 const MAXE=6, SPEC_CD=48, HERO_CD=60;
 const TEAM=[{main:'#3fc1ff',dark:'#1f6aa8',glow:'rgba(63,193,255,'},{main:'#ff4d5e',dark:'#a82636',glow:'rgba(255,77,94,'}];
 const ERAS=[
@@ -479,10 +480,10 @@ const UPG=[
  {id:'hero',nm:'Destan Yazıcısı',d:'Komutanın canı ve hasarı +%12, bekleme -%8.',max:5,base:3}
 ];
 const HEROES=[
- {id:'arda',nm:'Arda',t:'Hat Bekçisi',d:'Zırhlı öncü. Yakınındaki dostlar %20 daha az hasar alır.',role:'melee',hp:540,dmg:26,rng:28,cd:1.0,spd:36,aura:'def',unlock:0},
- {id:'selin',nm:'Selin',t:'Gök Okçusu',d:'Uzun menzilli nişancı. Yakınındaki dostlar %25 daha hızlı saldırır.',role:'ranged',hp:300,dmg:22,rng:250,cd:0.9,spd:40,aura:'haste',unlock:3},
- {id:'toprak',nm:'Toprak',t:'Kuşatma Ustası',d:'Alan hasarlı bombalar atar. Yakınındaki dostlar %20 fazla hasar verir.',role:'ranged',hp:380,dmg:30,rng:210,cd:2.0,spd:32,splash:50,aura:'dmg',unlock:6},
- {id:'vargun',nm:'Vargun',t:'Kızıl Pençe',d:'Verdiği hasarın %35’i kadar iyileşen savaş lordu.',role:'melee',hp:620,dmg:34,rng:28,cd:0.85,spd:40,aura:'leech',unlock:12}
+ {id:'arda',nm:'Arda',t:'Hat Bekçisi',d:'Zırhlı öncü. Yakınındaki dostlar %20 daha az hasar alır.',role:'melee',hp:340,dmg:18,rng:28,cd:1.0,spd:36,aura:'def',unlock:0},
+ {id:'selin',nm:'Selin',t:'Gök Okçusu',d:'Uzun menzilli nişancı. Yakınındaki dostlar %25 daha hızlı saldırır.',role:'ranged',hp:200,dmg:15,rng:250,cd:0.9,spd:40,aura:'haste',unlock:3},
+ {id:'toprak',nm:'Toprak',t:'Kuşatma Ustası',d:'Alan hasarlı bombalar atar. Yakınındaki dostlar %20 fazla hasar verir.',role:'ranged',hp:240,dmg:22,rng:210,cd:2.0,spd:32,splash:50,aura:'dmg',unlock:6},
+ {id:'vargun',nm:'Vargun',t:'Kızıl Pençe',d:'Verdiği hasarın %25’i kadar iyileşen savaş lordu.',role:'melee',hp:380,dmg:22,rng:28,cd:0.85,spd:40,aura:'leech',unlock:12}
 ];
 const DOC=[
  {id:'melee_hp',nm:'Kalkan Duvarı',d:'Yakın dövüş birliklerinin canı +%25.'},
@@ -1145,18 +1146,19 @@ function heroDef(H,e){const key='H_'+H.id+'_'+e;if(heroDefCache[key])return hero
  return heroDefCache[key]={id:key,nm:H.nm,role:H.role,draw:'hero',w,hp:H.hp,dmg:H.dmg,rng:H.rng,cd:H.cd,spd:H.spd,cost:150,tr:0,hw:12,ch:32,oy:-42,proj,splash:H.splash||0,aura:H.aura,era:e,hero:H};}
 function newMatch(cfg){
  const demo=!!cfg.demo,ch=cfg.chapter!=null?STORY[cfg.chapter]:null;
- const diff=ch?ch.diff:(cfg.diff|0);const D=DIFF[demo?1:diff];
+ const diff=ch?ch.diff:(cfg.diff|0);const D=demo?DIFF[1]:ch?Object.assign({},DIFF[Math.min(diff,2)],{xp:DIFF[Math.min(diff,2)].xp*(diff>2?1.12:1)}):DIFF[diff];
  const mut={};(ch?ch.mut:[]).forEach(k=>mut[k]=true);
  const se=ch?ch.se:0,me=ch?ch.me:MAXE;
  const pm=demo?{hp:1,dmg:1,inc:1,xp:2.6,base:1,spec:1,slots:2,gold:1,hero:1}:{hp:1+0.08*L('hp'),dmg:1+0.08*L('dmg'),inc:1+0.15*L('inc'),xp:1+0.12*L('xp'),base:1+0.15*L('base'),spec:1-0.1*L('spec'),slots:1+L('slot'),gold:(1+0.35*L('gold'))*(mut.siege?1.5:1),hero:1+0.12*L('hero')};
  const am={hp:D.stat,dmg:D.stat,inc:D.inc,xp:demo?2.6:D.xp,base:(1+diff*0.1)*(mut.siege?1.6:1),spec:1.2,slots:D.slots,gold:D.inc,hero:D.stat};
- const mk=(m,heroCd)=>{const hp=1600*Math.pow(1.7,se)*m.base;return{era:se,xp:0,gold:175*C[se]*(se?0.8:1)*m.gold,hp,maxHp:hp,queue:[],trainT:0,turrets:[null,null,null],specCd:demo?20:14,hitT:0,smokeT:0,doc:{},heroCd,heroU:null,path:{},perks:{},bx:0,march:true,moveA:0,wheel:0};};
+ if(ch){am.inc*=0.85;am.hp*=0.92;am.dmg*=0.92;am.xp*=0.9;am.gold*=0.85;am.hero*=0.85;}
+ const mk=(m,heroCd)=>{const hp=1600*BASEH[se]*m.base;return{era:se,xp:0,gold:175*C[se]*(se?0.8:1)*m.gold,hp,maxHp:hp,queue:[],trainT:0,turrets:[null,null,null],specCd:demo?20:14,hitT:0,smokeT:0,doc:{},heroCd,heroU:null,path:{},perks:{},bx:0,march:true,moveA:0,wheel:0};};
  let ph=null,ah=null;
  if(demo){ph=HEROES[0];ah=HEROES[1];}
  else{ph=HEROES.find(h=>h.id===cfg.hero&&heroOpen(h))||HEROES[0];
   if(mut.boss)ah=HEROES[3];else if(!ch&&diff>=2)ah=HEROES[diff===3?3:(Math.random()*3|0)];else if(ch&&ch.diff>=2&&cfg.chapter>=6)ah=HEROES[Math.random()*3|0];}
  G={demo,diff,ch,chapter:cfg.chapter,cfg,mut,maxEra:me,startEra:se,t:0,units:[],proj:[],parts:[],fx:[],strikes:[],texts:[],m:[pm,am],D:[demo?D:null,D],
-  sides:[mk(pm,demo?25:15),mk(am,mut.boss?35:45)],hero:[ph,ah],ai:[{t:1,save:false},{t:1.5,save:false}],
+  sides:[mk(pm,demo?25:15),mk(am,mut.boss?60:45)],hero:[ph,ah],ai:[{t:1,save:false},{t:1.5,save:false}],
   evtOn:demo||(ch?!!mut.events:!!cfg.events),event:null,nextEvt:mut.events?30:rand(55,70),waveT:45,
   over:false,win:false,endT:0,speed:1,paused:false,choosing:false,shake:0,flash:0,bgFrom:se,bgT:1,stats:{kills:0,lost:0,spent:0},amb:[]};
  G.zone={x:W/2,ctrl:0,owner:-1,hold:0,need:25};G.sides.forEach((sd,i)=>{sd.bx=i?EB:PB;});G.sides[1].march=demo||diff>=1;
@@ -1201,7 +1203,7 @@ function turretPos(s,i){const sl=SLOTS[i];return{x:baseX(s)+dirOf(s)*sl.x,y:GY+s
 function canEra(s){const sd=G.sides[s];return sd.era<G.maxEra&&sd.xp>=XPN[sd.era];}
 function eraUp(s){
  if(!canEra(s)||G.over)return false;const sd=G.sides[s];
- sd.xp-=XPN[sd.era];sd.era++;sd.maxHp*=1.7;sd.hp=Math.min(sd.maxHp,sd.hp*1.7+sd.maxHp*0.08);
+ sd.xp-=XPN[sd.era];sd.era++;const br=BASEH[sd.era]/BASEH[sd.era-1];sd.maxHp*=br;sd.hp=Math.min(sd.maxHp,sd.hp*br+sd.maxHp*0.08);
  const bx=baseX(s);ring(bx,GY-90,20,260,TEAM[s].main,0.9);ring(bx,GY-90,10,180,'#ffffff',0.6);
  for(let i=0;i<50;i++)part(bx+rand(-60,60),GY-rand(0,180),rand(-60,60),rand(-200,-40),rand(0.6,1.4),rand(2,4),i%2?'#fff2c0':TEAM[s].main,-40,'glow');
  if(s===0){G.bgFrom=sd.era-1;G.bgT=0;G.flash=0.7;G.shake=Math.max(G.shake,8);
@@ -1250,7 +1252,7 @@ function hurtBase(s,dmg,src){const sd=G.sides[s];if(G.over)return;sd.hp-=dmg;sd.
 function attack(u,tgt,isBase){
  const d=u.def,dir=dirOf(u.side);u.cdT=d.cd*rand(0.92,1.08);u.atk=1;
  const dmg=u.dmg*(u.bDmg?1.2:1)*(1+0.12*dc(u.side,'dmg'));
- if(d.aura==='leech'||d.leech)u.hp=Math.min(u.maxHp,u.hp+dmg*0.35);
+ if(d.aura==='leech'||d.leech)u.hp=Math.min(u.maxHp,u.hp+dmg*0.25);
  if(d.cone){const r=urng(u);for(const f of G.units){if(f.dead||f.side===u.side)continue;const dx=(f.x-u.x)*dir;if(dx>-f.def.hw&&dx-d.hw-f.def.hw<=r)hurt(f,dmg,u.side);}
   const ef=baseX(1-u.side)-dir*BF;if((ef-u.x)*dir<=r)hurtBase(1-u.side,dmg,u.side);
   for(let i=0;i<4;i++)part(u.x+dir*24,GY+u.lane-26,dir*rand(120,220),rand(-30,20),rand(0.2,0.35),rand(3,5),i%2?'#ffb040':'#ff7020',-60,'glow');sfx('flame',u.x);return;}
@@ -1280,7 +1282,7 @@ function updateUnit(u,dt,alive){
  for(const f of foes){const dx=(f.x-u.x)*dir;if(dx>-f.def.hw-d.hw){const dist=dx-d.hw-f.def.hw;if(dist<td){td=dist;tgt=f;}}}
  const ef=baseX(1-u.side)-dir*BF,bd=(ef-u.x)*dir;
  u.cdT-=dt*(u.bHaste?1.25:1)*(evIs('fervor')?1.3:1);let acting=false;
- if(tgt&&td<=rng_){acting=true;if(u.cdT<=0)attack(u,tgt,false);}
+ if(tgt&&td<=rng_){acting=true;if(u.cdT<=0){u.atkN=(u.atkN||0)+1;if(bd<=rng_+4&&u.atkN%3===0)attack(u,null,true);else attack(u,tgt,false);}}
  else if(bd<=rng_&&(!tgt||td>bd)){acting=true;if(u.cdT<=0)attack(u,null,true);}
  if(!acting){
   if(u.cdT<0)u.cdT=0;
@@ -1295,12 +1297,13 @@ function updateSide(s,dt){
  const sd=G.sides[s];
  updateFort(s,dt);
  sd.gold+=income(s)*dt;
- if(s===1||G.demo)sd.xp+=(G.D[s]?G.D[s].trickle:0)*dt*(G.mut.rush?1.5:1);
+ if(s===1||G.demo)sd.xp+=(G.D[s]?G.D[s].trickle:0)*dt*(G.mut.rush?1.5:1)*(G.ch?0.7:1);
  sd.specCd=Math.max(0,sd.specCd-dt*(perk(s,'spec')?1.3:1)*(G.mut.unstable?2:1)*(1+0.3*dc(s,'spec')));
  if(!sd.heroU||sd.heroU.dead)sd.heroCd=Math.max(0,sd.heroCd-dt);
  sd.hitT=Math.max(0,sd.hitT-dt);
  if(dc(s,'regen'))sd.hp=Math.min(sd.maxHp,sd.hp+sd.maxHp*0.005*dc(s,'regen')*dt);
- if(sd.queue.length){const d=sd.queue[0];sd.trainT+=dt*(perk(s,'train')?1.25:1)*(1+0.3*dc(s,'train'));if(sd.trainT>=d.tr){const sx=baseX(s)+dirOf(s)*(BF-10);let ok=true;for(const u of G.units)if(!u.dead&&u.side===s&&Math.abs(u.x-sx)<u.def.hw+d.hw+2){ok=false;break;}if(ok){spawnUnit(s,d);sd.queue.shift();sd.trainT=0;}}}
+ {const gx=baseX(s)+dirOf(s)*(BF-10);let press=false;for(const u of G.units)if(!u.dead&&u.side!==s&&Math.abs(u.x-gx)<80){press=true;break;}if(press&&!sd.gate&&s===0&&!G.demo)toast('Kapın kuşatıldı! Eğitim yavaşladı.');sd.gate=press;}
+ if(sd.queue.length){const d=sd.queue[0];sd.trainT+=dt*(perk(s,'train')?1.25:1)*(1+0.3*dc(s,'train'))*(sd.gate?0.5:1);if(sd.trainT>=d.tr){const sx=baseX(s)+dirOf(s)*(BF-10);let ok=true;for(const u of G.units)if(!u.dead&&u.side===s&&Math.abs(u.x-sx)<u.def.hw+d.hw+2){ok=false;break;}if(ok){spawnUnit(s,d);sd.queue.shift();sd.trainT=0;}}}
  else sd.trainT=0;
  for(let i=0;i<3;i++){const tr=sd.turrets[i];if(!tr)continue;const P=TUR[tr.era],p=turretPos(s,i);tr.fire=Math.max(0,tr.fire-dt*4);tr.cdT-=dt*(perk(s,'turret')?1.3:1);
   let best=null,bd=1e9;for(const u of G.units){if(u.dead||u.side===s)continue;const dd=Math.abs(u.x-p.x);if(dd<=P.rng&&dd<bd){bd=dd;best=u;}}
