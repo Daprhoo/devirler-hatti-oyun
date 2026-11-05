@@ -30,3 +30,9 @@ Settings → Pages → Source: "Deploy from a branch" → Branch: `main`, klasö
 - HUD / SCREENS: arayüz ve menüler
 
 İlerleme tarayıcının localStorage'ına kaydedilir (`devirler_hatti_v1`).
+
+## Görsel kaynakları
+- Kuantum Çağı robot birlikleri: "The Robot - Free Sprite", yazar pzuh, lisans CC0
+  https://opengameart.org/content/the-robot-free-sprite
+  (Kareler küçültülüp tek bir sprite sayfasında birleştirildi; takım renkleri oyun içinde uygulanıyor.)
+- Diğer tüm görseller oyun içinde kodla çiziliyor.
