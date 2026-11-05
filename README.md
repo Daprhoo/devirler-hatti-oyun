@@ -20,7 +20,7 @@ Tarayıcıda oynanan, çağ atlayan bir şerit strateji oyunu. Tek dosya (`index
 Settings → Pages → Source: "Deploy from a branch" → Branch: `main`, klasör `/ (root)` → Save.
 
 ## Kontroller
-`1` `2` `3` birlik · `4` kule · `5` özel güç · `6` komutan çağır / yetenek kullan · `E` çağ atla · `M` kale · `Boşluk` duraklat
+`1` `2` `3` birlik · `4` kule · `5` özel güç · `6` komutan çağır / yetenek kullan · `E` çağ atla · `M` kale · `R` toplan/hücum · `Boşluk` duraklat
 
 ## Kod yapısı (`index.html` içinde)
 - DATA: çağlar, birlikler, medeniyet yolları, kuleler, özel güçler, komutanlar, doktrinler, olaylar, hikâye
