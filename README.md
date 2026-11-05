@@ -10,7 +10,7 @@ Tarayıcıda oynanan, çağ atlayan bir şerit strateji oyunu. Tek dosya (`index
 - **Devir ağacı:** Her çağ atlayışında iki medeniyet yolundan birini seçersin (ör. Şövalye Tarikatı ya da Bozkır Hanlığı). Her yol kendi bonusunu ve özel birliğini getirir.
 - 7 çağ: Taş, Bronz, Ortaçağ, Barut, Çelik, Yıldız, Kuantum
 - 12 bölümlük hikâye modu (Sefer), 4 zorluklu Serbest Savaş
-- 4 komutan, 12 doktrin, savaş alanı olayları, kalıcı Miras Ağacı
+- 4 komutan, her birinin kendi yeteneği (Kalkan Duvarı, Yıldız Oku, Büyük Patlama, Kan Öfkesi); 12 doktrin, savaş alanı olayları, kalıcı Miras Ağacı
 - Her çağa özel üretken müzik ve konumsal ses efektleri
 
 ## Çalıştırma
@@ -20,7 +20,7 @@ Tarayıcıda oynanan, çağ atlayan bir şerit strateji oyunu. Tek dosya (`index
 Settings → Pages → Source: "Deploy from a branch" → Branch: `main`, klasör `/ (root)` → Save.
 
 ## Kontroller
-`1` `2` `3` birlik · `4` kule · `5` özel güç · `6` komutan · `E` çağ atla · `M` kale · `Boşluk` duraklat
+`1` `2` `3` birlik · `4` kule · `5` özel güç · `6` komutan çağır / yetenek kullan · `E` çağ atla · `M` kale · `Boşluk` duraklat
 
 ## Kod yapısı (`index.html` içinde)
 - DATA: çağlar, birlikler, medeniyet yolları, kuleler, özel güçler, komutanlar, doktrinler, olaylar, hikâye
